@@ -17,7 +17,6 @@ class TipoCalle extends Model
         'nombre_tipo_calle',
     ];
 
-    // Relación con las calles
     public function calles()
     {
         return $this->hasMany(Calle::class, 'id_tipo_calle');

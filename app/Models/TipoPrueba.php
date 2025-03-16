@@ -17,7 +17,6 @@ class TipoPrueba extends Model
         'nombre_tipo_prueba',
     ];
 
-    // Relación con las pruebas
     public function pruebas()
     {
         return $this->hasMany(Prueba::class, 'id_tipo_prueba');

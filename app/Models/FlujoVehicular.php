@@ -19,13 +19,11 @@ class FlujoVehicular extends Model
         'velocidad_promedio',
     ];
 
-    // Relación con el semáforo
     public function semaforo()
     {
         return $this->belongsTo(Semaforo::class, 'id_semaforo');
     }
 
-    // Relación con los detalles del flujo vehicular
     public function detalles()
     {
         return $this->hasMany(FlujoVehicularDetalle::class, 'id_flujo');

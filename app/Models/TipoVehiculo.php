@@ -17,7 +17,6 @@ class TipoVehiculo extends Model
         'nombre_tipo_vehiculo',
     ];
 
-    // Relación con los detalles del flujo vehicular
     public function flujosVehicularesDetalle()
     {
         return $this->hasMany(FlujoVehicularDetalle::class, 'id_tipo_vehiculo');

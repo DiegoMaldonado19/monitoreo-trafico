@@ -17,7 +17,6 @@ class TipoEstado extends Model
         'tipo_estado',
     ];
 
-    // Relación con los estados de las pruebas
     public function pruebasEstados()
     {
         return $this->hasMany(PruebaEstado::class, 'id_tipo_estado');

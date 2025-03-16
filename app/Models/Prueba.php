@@ -20,19 +20,16 @@ class Prueba extends Model
         'id_tipo_prueba',
     ];
 
-    // Relación con el usuario
     public function usuario()
     {
         return $this->belongsTo(Usuario::class, 'id_usuario');
     }
 
-    // Relación con el tipo de prueba
     public function tipoPrueba()
     {
         return $this->belongsTo(TipoPrueba::class, 'id_tipo_prueba');
     }
 
-    // Relación con los estados de las pruebas
     public function estados()
     {
         return $this->hasMany(PruebaEstado::class, 'id_prueba');

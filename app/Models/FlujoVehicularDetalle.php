@@ -19,13 +19,11 @@ class FlujoVehicularDetalle extends Model
         'cantidad_vehiculos',
     ];
 
-    // Relación con el flujo vehicular
     public function flujoVehicular()
     {
         return $this->belongsTo(FlujoVehicular::class, 'id_flujo');
     }
 
-    // Relación con el tipo de vehículo
     public function tipoVehiculo()
     {
         return $this->belongsTo(TipoVehiculo::class, 'id_tipo_vehiculo');

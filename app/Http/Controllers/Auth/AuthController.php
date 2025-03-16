@@ -1,37 +1,31 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    // Mostrar formulario de login
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Procesar el login
     public function login(Request $request)
     {
-        // Validar los datos del formulario
         $request->validate([
             'nombre_usuario' => 'required',
             'contrasena' => 'required',
         ]);
 
-        // Buscar al usuario en la base de datos
         $usuario = Usuario::where('nombre_usuario', $request->nombre_usuario)->first();
 
-        // Verificar si el usuario existe y la contraseña es correcta
         if ($usuario && Hash::check($request->contrasena, $usuario->contrasena)) {
-            // Autenticar al usuario manualmente
             auth()->login($usuario);
 
-            // Redirigir según el rol
             switch ($usuario->rol->nombre_rol) {
                 case 'Administrador':
                     return redirect()->route('admin.usuarios.index');
@@ -44,17 +38,13 @@ class AuthController extends Controller
             }
         }
 
-        // Si la autenticación falla, redirigir al login con un mensaje de error
         return redirect()->route('login')->withErrors(['error' => 'Credenciales incorrectas.']);
     }
 
-    // Cerrar sesión
     public function logout()
     {
-        // Cerrar la sesión manualmente
         auth()->logout();
 
-        // Redirigir al login
         return redirect()->route('login');
     }
 }

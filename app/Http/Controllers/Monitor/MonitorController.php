@@ -3,48 +3,126 @@
 namespace App\Http\Controllers\Monitor;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\FlujoVehicular;
-use App\Models\FlujoVehicularDetalle;
 use App\Models\Prueba;
+use App\Models\Semaforo;
 use App\Models\TipoPrueba;
+use Illuminate\Http\Request;
 
 class MonitorController extends Controller
 {
-    // Mostrar formulario para cargar flujo vehicular desde JSON
-    public function showCargarFlujoJson()
+    // Métodos para gestionar el flujo vehicular
+    public function indexFlujoVehicular()
     {
-        return view('monitor.flujo-vehicular.cargar-json');
+        $flujos = FlujoVehicular::with('semaforo')->get();
+        return view('monitor.flujo-vehicular.index', compact('flujos'));
     }
 
-    // Procesar la carga de flujo vehicular desde JSON
-    public function cargarFlujoJson(Request $request)
+    public function createFlujoVehicular()
+    {
+        $semaforos = Semaforo::all();
+        return view('monitor.flujo-vehicular.create', compact('semaforos'));
+    }
+
+    public function storeFlujoVehicular(Request $request)
     {
         $request->validate([
-            'archivo_json' => 'required|file|mimes:json',
+            'id_semaforo' => 'required|exists:semaforo,id_semaforo',
+            'fecha_hora' => 'required|date',
+            'velocidad_promedio' => 'required|numeric|min:0',
         ]);
 
-        $jsonData = json_decode(file_get_contents($request->file('archivo_json')->getPathname()), true);
+        FlujoVehicular::create($request->all());
 
-        // Lógica para guardar los datos del JSON en la base de datos
-        // ...
-
-        return redirect()->route('monitor.flujo-vehicular.index')->with('success', 'Flujo vehicular cargado desde JSON');
+        return redirect()->route('monitor.flujo-vehicular.index')->with('success', 'Flujo vehicular registrado correctamente.');
     }
 
-    // Generar flujo vehicular de manera aleatoria
-    public function generarFlujoAleatorio()
+    public function editFlujoVehicular($id)
     {
-        // Lógica para generar datos aleatorios y guardarlos en la base de datos
-        // ...
-
-        return redirect()->route('monitor.flujo-vehicular.index')->with('success', 'Flujo vehicular generado aleatoriamente');
+        $flujo = FlujoVehicular::findOrFail($id);
+        $semaforos = Semaforo::all();
+        return view('monitor.flujo-vehicular.edit', compact('flujo', 'semaforos'));
     }
 
-    // Mostrar lista de pruebas realizadas
+    public function updateFlujoVehicular(Request $request, $id)
+    {
+        $request->validate([
+            'id_semaforo' => 'required|exists:semaforo,id_semaforo',
+            'fecha_hora' => 'required|date',
+            'velocidad_promedio' => 'required|numeric|min:0',
+        ]);
+
+        $flujo = FlujoVehicular::findOrFail($id);
+        $flujo->update($request->all());
+
+        return redirect()->route('monitor.flujo-vehicular.index')->with('success', 'Flujo vehicular actualizado correctamente.');
+    }
+
+    public function destroyFlujoVehicular($id)
+    {
+        $flujo = FlujoVehicular::findOrFail($id);
+        $flujo->delete();
+
+        return redirect()->route('monitor.flujo-vehicular.index')->with('success', 'Flujo vehicular eliminado correctamente.');
+    }
+
+    // Métodos para gestionar pruebas
     public function indexPruebas()
     {
         $pruebas = Prueba::where('id_usuario', auth()->id())->with('tipoPrueba')->get();
         return view('monitor.pruebas.index', compact('pruebas'));
+    }
+
+    public function createPrueba()
+    {
+        $tiposPrueba = TipoPrueba::all();
+        return view('monitor.pruebas.create', compact('tiposPrueba'));
+    }
+
+    public function storePrueba(Request $request)
+    {
+        $request->validate([
+            'id_tipo_prueba' => 'required|exists:tipo_prueba,id_tipo_prueba',
+            'fecha_hora_inicio' => 'required|date',
+            'fecha_hora_fin' => 'required|date|after:fecha_hora_inicio',
+        ]);
+
+        Prueba::create([
+            'id_usuario' => auth()->id(),
+            'id_tipo_prueba' => $request->id_tipo_prueba,
+            'fecha_hora_inicio' => $request->fecha_hora_inicio,
+            'fecha_hora_fin' => $request->fecha_hora_fin,
+        ]);
+
+        return redirect()->route('monitor.pruebas.index')->with('success', 'Prueba creada correctamente.');
+    }
+
+    public function editPrueba($id)
+    {
+        $prueba = Prueba::findOrFail($id);
+        $tiposPrueba = TipoPrueba::all();
+        return view('monitor.pruebas.edit', compact('prueba', 'tiposPrueba'));
+    }
+
+    public function updatePrueba(Request $request, $id)
+    {
+        $request->validate([
+            'id_tipo_prueba' => 'required|exists:tipo_prueba,id_tipo_prueba',
+            'fecha_hora_inicio' => 'required|date',
+            'fecha_hora_fin' => 'required|date|after:fecha_hora_inicio',
+        ]);
+
+        $prueba = Prueba::findOrFail($id);
+        $prueba->update($request->all());
+
+        return redirect()->route('monitor.pruebas.index')->with('success', 'Prueba actualizada correctamente.');
+    }
+
+    public function destroyPrueba($id)
+    {
+        $prueba = Prueba::findOrFail($id);
+        $prueba->delete();
+
+        return redirect()->route('monitor.pruebas.index')->with('success', 'Prueba eliminada correctamente.');
     }
 }

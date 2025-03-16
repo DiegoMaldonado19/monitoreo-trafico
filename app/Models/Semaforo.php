@@ -20,13 +20,11 @@ class Semaforo extends Model
         'tiempo_rojo',
     ];
 
-    // Relación con la calle
     public function calle()
     {
         return $this->belongsTo(Calle::class, 'id_calle');
     }
 
-    // Relación con el flujo vehicular
     public function flujosVehiculares()
     {
         return $this->hasMany(FlujoVehicular::class, 'id_semaforo');

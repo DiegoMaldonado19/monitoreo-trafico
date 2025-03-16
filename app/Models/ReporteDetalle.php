@@ -20,13 +20,11 @@ class ReporteDetalle extends Model
         'velocidad_promedio',
     ];
 
-    // Relación con el reporte
     public function reporte()
     {
         return $this->belongsTo(Reporte::class, 'id_reporte');
     }
 
-    // Relación con el tipo de vehículo
     public function tipoVehiculo()
     {
         return $this->belongsTo(TipoVehiculo::class, 'id_tipo_vehiculo');

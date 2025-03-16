@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\MonitorController;
-use App\Http\Controllers\SupervisorController;
-use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Monitor\MonitorController;
+use App\Http\Controllers\Supervisor\SupervisorController;
+use App\Http\Controllers\Reporte\ReporteController;
 
 // Ruta de inicio (redirige al login)
 Route::get('/', function () {
@@ -26,20 +26,49 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para el Administrador
     Route::prefix('admin')->name('admin.')->middleware('role:Administrador')->group(function () {
-        Route::resource('usuarios', AdminController::class);
-        Route::resource('calles', CalleController::class);
-        Route::resource('semaforos', SemaforoController::class);
+        Route::get('usuarios', [AdminController::class, 'indexUsuarios'])->name('usuarios.index');
+        Route::get('usuarios/create', [AdminController::class, 'createUsuario'])->name('usuarios.create');
+        Route::post('usuarios', [AdminController::class, 'storeUsuario'])->name('usuarios.store');
+        Route::get('usuarios/{id}/edit', [AdminController::class, 'editUsuario'])->name('usuarios.edit');
+        Route::put('usuarios/{id}', [AdminController::class, 'updateUsuario'])->name('usuarios.update');
+        Route::delete('usuarios/{id}', [AdminController::class, 'destroyUsuario'])->name('usuarios.destroy');
+
+        Route::get('calles', [AdminController::class, 'indexCalles'])->name('calles.index');
+        Route::get('calles/create', [AdminController::class, 'createCalle'])->name('calles.create');
+        Route::post('calles', [AdminController::class, 'storeCalle'])->name('calles.store');
+        Route::get('calles/{id}/edit', [AdminController::class, 'editCalle'])->name('calles.edit');
+        Route::put('calles/{id}', [AdminController::class, 'updateCalle'])->name('calles.update');
+        Route::delete('calles/{id}', [AdminController::class, 'destroyCalle'])->name('calles.destroy');
+
+        Route::get('semaforos', [AdminController::class, 'indexSemaforos'])->name('semaforos.index');
+        Route::get('semaforos/create', [AdminController::class, 'createSemaforo'])->name('semaforos.create');
+        Route::post('semaforos', [AdminController::class, 'storeSemaforo'])->name('semaforos.store');
+        Route::get('semaforos/{id}/edit', [AdminController::class, 'editSemaforo'])->name('semaforos.edit');
+        Route::put('semaforos/{id}', [AdminController::class, 'updateSemaforo'])->name('semaforos.update');
+        Route::delete('semaforos/{id}', [AdminController::class, 'destroySemaforo'])->name('semaforos.destroy');
     });
 
     // Rutas para el Monitor
     Route::prefix('monitor')->name('monitor.')->middleware('role:Monitor')->group(function () {
-        Route::resource('flujo-vehicular', FlujoVehicularController::class);
-        Route::resource('pruebas', PruebaController::class);
+        Route::get('flujo-vehicular', [MonitorController::class, 'indexFlujoVehicular'])->name('flujo-vehicular.index');
+        Route::get('flujo-vehicular/create', [MonitorController::class, 'createFlujoVehicular'])->name('flujo-vehicular.create');
+        Route::post('flujo-vehicular', [MonitorController::class, 'storeFlujoVehicular'])->name('flujo-vehicular.store');
+        Route::get('flujo-vehicular/{id}/edit', [MonitorController::class, 'editFlujoVehicular'])->name('flujo-vehicular.edit');
+        Route::put('flujo-vehicular/{id}', [MonitorController::class, 'updateFlujoVehicular'])->name('flujo-vehicular.update');
+        Route::delete('flujo-vehicular/{id}', [MonitorController::class, 'destroyFlujoVehicular'])->name('flujo-vehicular.destroy');
+
+        Route::get('pruebas', [MonitorController::class, 'indexPruebas'])->name('pruebas.index');
+        Route::get('pruebas/create', [MonitorController::class, 'createPrueba'])->name('pruebas.create');
+        Route::post('pruebas', [MonitorController::class, 'storePrueba'])->name('pruebas.store');
+        Route::get('pruebas/{id}/edit', [MonitorController::class, 'editPrueba'])->name('pruebas.edit');
+        Route::put('pruebas/{id}', [MonitorController::class, 'updatePrueba'])->name('pruebas.update');
+        Route::delete('pruebas/{id}', [MonitorController::class, 'destroyPrueba'])->name('pruebas.destroy');
     });
 
     // Rutas para el Supervisor
     Route::prefix('supervisor')->name('supervisor.')->middleware('role:Supervisor')->group(function () {
-        Route::resource('reportes', ReporteController::class);
+        Route::get('reportes', [ReporteController::class, 'indexReportes'])->name('reportes.index');
         Route::get('reportes/generar', [ReporteController::class, 'generarReporte'])->name('reportes.generar');
+        Route::get('reportes/{id}', [ReporteController::class, 'showReporte'])->name('reportes.show');
     });
 });

@@ -3,45 +3,39 @@
 namespace App\Http\Controllers\Supervisor;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Reporte;
-use App\Models\Calle;
-use App\Models\Prueba;
+use App\Models\ReporteDetalle;
+use App\Models\TipoVehiculo;
+use Illuminate\Http\Request;
 
 class SupervisorController extends Controller
 {
-    // Mostrar lista de reportes
+    // Métodos para gestionar reportes
     public function indexReportes()
     {
         $reportes = Reporte::with('prueba')->get();
         return view('supervisor.reportes.index', compact('reportes'));
     }
 
-    // Generar un nuevo reporte
     public function generarReporte()
     {
-        // Lógica para generar reportes basados en las consultas de "Consultas-2.sql"
-        // ...
-
-        return redirect()->route('supervisor.reportes.index')->with('success', 'Reporte generado correctamente');
-    }
-
-    // Mostrar lista de calles y avenidas
-    public function indexCalles()
-    {
-        $calles = Calle::with('tipoCalle')->get();
-        return view('supervisor.calles.index', compact('calles'));
-    }
-
-    // Agregar una nueva calle o avenida
-    public function storeCalle(Request $request)
-    {
-        $request->validate([
-            'nombre_calle' => 'required',
-            'id_tipo_calle' => 'required|exists:tipo_calle,id_tipo_calle',
+        $reporte = Reporte::create([
+            'id_prueba' => null,
+            'fecha_hora' => now(),
         ]);
 
-        Calle::create($request->all());
-        return redirect()->route('supervisor.calles.index')->with('success', 'Calle/avenida agregada correctamente');
+        $reporte->detalles()->create([
+            'id_tipo_vehiculo' => 1,
+            'cantidad_vehiculos' => 50,
+            'velocidad_promedio' => 60.5,
+        ]);
+
+        return redirect()->route('supervisor.reportes.index')->with('success', 'Reporte generado correctamente.');
+    }
+
+    public function showReporte($id)
+    {
+        $reporte = Reporte::with('detalles.tipoVehiculo')->findOrFail($id);
+        return view('supervisor.reportes.show', compact('reporte'));
     }
 }

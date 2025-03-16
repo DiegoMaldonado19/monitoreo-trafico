@@ -17,10 +17,8 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, $role)
     {
-        // Obtener el usuario autenticado
         $user = $request->user();
 
-        // Verificar si el usuario tiene el rol necesario
         if (!$user || $user->rol->nombre_rol !== $role) {
             return redirect()->route('login')->withErrors(['error' => 'No tienes permiso para acceder a esta sección.']);
         }

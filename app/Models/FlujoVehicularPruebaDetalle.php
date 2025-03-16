@@ -19,13 +19,11 @@ class FlujoVehicularPruebaDetalle extends Model
         'cantidad_vehiculos',
     ];
 
-    // Relación con el flujo vehicular durante las pruebas
     public function flujoVehicularPrueba()
     {
         return $this->belongsTo(FlujoVehicularPrueba::class, 'id_flujo_prueba');
     }
 
-    // Relación con el tipo de vehículo
     public function tipoVehiculo()
     {
         return $this->belongsTo(TipoVehiculo::class, 'id_tipo_vehiculo');

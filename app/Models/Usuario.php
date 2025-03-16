@@ -19,13 +19,11 @@ class Usuario extends Model
         'id_rol',
     ];
 
-    // Relación con el rol
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'id_rol');
     }
 
-    // Relación con las pruebas realizadas
     public function pruebas()
     {
         return $this->hasMany(Prueba::class, 'id_usuario');

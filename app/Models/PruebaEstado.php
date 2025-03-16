@@ -21,19 +21,16 @@ class PruebaEstado extends Model
         'velocidad_promedio',
     ];
 
-    // Relación con la prueba
     public function prueba()
     {
         return $this->belongsTo(Prueba::class, 'id_prueba');
     }
 
-    // Relación con el tipo de estado
     public function tipoEstado()
     {
         return $this->belongsTo(TipoEstado::class, 'id_tipo_estado');
     }
 
-    // Relación con el tipo de vehículo
     public function tipoVehiculo()
     {
         return $this->belongsTo(TipoVehiculo::class, 'id_tipo_vehiculo');
