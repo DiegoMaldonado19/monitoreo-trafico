@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Usuario;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -18,32 +17,44 @@ class AuthController extends Controller
     // Procesar el login
     public function login(Request $request)
     {
-        $credentials = $request->only('nombre_usuario', 'contrasena');
+        // Validar los datos del formulario
+        $request->validate([
+            'nombre_usuario' => 'required',
+            'contrasena' => 'required',
+        ]);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $rol = $user->rol->nombre_rol;
+        // Buscar al usuario en la base de datos
+        $usuario = Usuario::where('nombre_usuario', $request->nombre_usuario)->first();
 
-            // Redirección basada en el rol
-            switch ($rol) {
+        // Verificar si el usuario existe y la contraseña es correcta
+        if ($usuario && Hash::check($request->contrasena, $usuario->contrasena)) {
+            // Autenticar al usuario manualmente
+            auth()->login($usuario);
+
+            // Redirigir según el rol
+            switch ($usuario->rol->nombre_rol) {
                 case 'Administrador':
-                    return redirect()->route('admin.dashboard');
+                    return redirect()->route('admin.usuarios.index');
                 case 'Monitor':
-                    return redirect()->route('monitor.dashboard');
+                    return redirect()->route('monitor.flujo-vehicular.index');
                 case 'Supervisor':
-                    return redirect()->route('supervisor.dashboard');
+                    return redirect()->route('supervisor.reportes.index');
                 default:
-                    return redirect()->route('login')->withErrors(['error' => 'Rol no válido']);
+                    return redirect()->route('login')->withErrors(['error' => 'Rol no válido.']);
             }
         }
 
-        return redirect()->route('login')->withErrors(['error' => 'Credenciales incorrectas']);
+        // Si la autenticación falla, redirigir al login con un mensaje de error
+        return redirect()->route('login')->withErrors(['error' => 'Credenciales incorrectas.']);
     }
 
     // Cerrar sesión
     public function logout()
     {
-        Auth::logout();
+        // Cerrar la sesión manualmente
+        auth()->logout();
+
+        // Redirigir al login
         return redirect()->route('login');
     }
 }
