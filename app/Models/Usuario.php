@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
     use HasFactory;
 
@@ -27,5 +27,10 @@ class Usuario extends Model
     public function pruebas()
     {
         return $this->hasMany(Prueba::class, 'id_usuario');
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->contrasena;
     }
 }

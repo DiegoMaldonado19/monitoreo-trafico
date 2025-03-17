@@ -24,7 +24,7 @@ class AuthController extends Controller
         $usuario = Usuario::where('nombre_usuario', $request->nombre_usuario)->first();
 
         if ($usuario && Hash::check($request->contrasena, $usuario->contrasena)) {
-            auth()->login($usuario);
+            auth()->login($usuario); // Aquí se autentica al usuario
 
             switch ($usuario->rol->nombre_rol) {
                 case 'Administrador':
