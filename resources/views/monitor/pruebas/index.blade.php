@@ -22,7 +22,7 @@
                     <td>{{ $prueba->fecha_hora_fin }}</td>
                     <td>{{ $prueba->tipoPrueba->nombre_tipo_prueba }}</td>
                     <td>
-                        <button class="btn btn-secondary btn-simular" data-id="{{ $prueba->id_prueba }}">Simular</button>
+                        <a href="{{ route('monitor.simulacion.index', $prueba->id_prueba) }}" class="btn btn-secondary">Simular</a>
                         <a href="{{ route('monitor.pruebas.show', $prueba->id_prueba) }}" class="btn btn-info">Ver Detalles</a>
                     </td>
                 </tr>
@@ -33,13 +33,4 @@
 @endsection
 
 @push('scripts')
-<script>
-    document.querySelectorAll('.btn-simular').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const pruebaId = this.dataset.id;
-            // Lógica de simulación aquí
-            alert('Simulación de prueba ID: ' + pruebaId);
-        });
-    });
-</script>
 @endpush

@@ -4,27 +4,23 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Monitor\MonitorController;
+use App\Http\Controllers\Monitor\SimulacionController;
 use App\Http\Controllers\Supervisor\SupervisorController;
 use App\Http\Controllers\Reporte\ReporteController;
 
-// Ruta de inicio (redirige al login)
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Rutas de autenticación
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Rutas protegidas por autenticación
 Route::middleware('auth')->group(function () {
-    // Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    // Rutas para el Administrador
     Route::prefix('admin')->name('admin.')->middleware('role:Administrador')->group(function () {
         Route::get('usuarios', [AdminController::class, 'indexUsuarios'])->name('usuarios.index');
         Route::get('usuarios/create', [AdminController::class, 'createUsuario'])->name('usuarios.create');
@@ -70,6 +66,9 @@ Route::middleware('auth')->group(function () {
         Route::get('pruebas/crear-random', [MonitorController::class, 'crearRandom'])->name('pruebas.crear-random');
         Route::post('pruebas/cargar-json', [MonitorController::class, 'cargarJson'])->name('pruebas.cargar-json');
         Route::post('pruebas/cargar-random', [MonitorController::class, 'cargarRandom'])->name('pruebas.cargar-random');
+
+        Route::get('simulacion/{id}', [SimulacionController::class, 'index'])->name('simulacion.index');
+        Route::get('simulacion/data/{id}', [SimulacionController::class, 'getData'])->name('simulacion.data');
     });
 
     Route::prefix('supervisor')->name('supervisor.')->middleware('role:Supervisor')->group(function () {
@@ -82,5 +81,4 @@ Route::middleware('auth')->group(function () {
         Route::get('consultaTiempoPromedio', [SupervisorController::class, 'consultaTiempoPromedio'])->name('consultaTiempoPromedio');
         Route::get('consultaPruebasIntervalo', [SupervisorController::class, 'consultaPruebasIntervalo'])->name('consultaPruebasIntervalo');
     });
-    
 });
