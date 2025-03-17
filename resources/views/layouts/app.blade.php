@@ -22,7 +22,6 @@
                             <a href="{{ route('admin.calles.index') }}">Calles</a>
                             <a href="{{ route('admin.semaforos.index') }}">Semáforos</a>
                         @elseif (auth()->user()->rol->nombre_rol === 'Monitor')
-                            <a href="{{ route('monitor.flujo-vehicular.index') }}">Flujo Vehicular</a>
                             <a href="{{ route('monitor.pruebas.index') }}">Pruebas</a>
                         @elseif (auth()->user()->rol->nombre_rol === 'Supervisor')
                             <a href="{{ route('supervisor.reportes.index') }}">Reportes</a>

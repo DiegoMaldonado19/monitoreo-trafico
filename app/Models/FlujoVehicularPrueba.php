@@ -30,8 +30,13 @@ class FlujoVehicularPrueba extends Model
         return $this->belongsTo(Semaforo::class, 'id_semaforo');
     }
 
-    public function detalles()
+    public function detallesFlujoVehicularPrueba()
     {
         return $this->hasMany(FlujoVehicularPruebaDetalle::class, 'id_flujo_prueba');
+    }
+    
+    public function tipoVehiculo()
+    {
+        return $this->belongsTo(TipoVehiculo::class, 'id_tipo_vehiculo');
     }
 }

@@ -17,7 +17,6 @@
         @elseif (auth()->user()->rol->nombre_rol === 'Monitor')
             <h2>Funcionalidades de Monitor</h2>
             <ul>
-                <li><a href="{{ route('monitor.flujo-vehicular.index') }}">Gestionar Flujo Vehicular</a></li>
                 <li><a href="{{ route('monitor.pruebas.index') }}">Gestionar Pruebas</a></li>
             </ul>
         @elseif (auth()->user()->rol->nombre_rol === 'Supervisor')

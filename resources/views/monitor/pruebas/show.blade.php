@@ -10,7 +10,6 @@
             <p class="card-text"><strong>Tipo de Prueba:</strong> {{ $prueba->tipoPrueba->nombre_tipo_prueba }}</p>
             <p class="card-text"><strong>Fecha Inicio:</strong> {{ $prueba->fecha_hora_inicio }}</p>
             <p class="card-text"><strong>Fecha Fin:</strong> {{ $prueba->fecha_hora_fin }}</p>
-            <a href="{{ route('monitor.pruebas.edit', $prueba->id_prueba) }}" class="btn btn-warning">Editar</a>
         </div>
     </div>
 </div>

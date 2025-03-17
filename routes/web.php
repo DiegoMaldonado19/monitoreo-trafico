@@ -63,6 +63,13 @@ Route::middleware('auth')->group(function () {
         Route::get('pruebas/{id}/edit', [MonitorController::class, 'editPrueba'])->name('pruebas.edit');
         Route::put('pruebas/{id}', [MonitorController::class, 'updatePrueba'])->name('pruebas.update');
         Route::delete('pruebas/{id}', [MonitorController::class, 'destroyPrueba'])->name('pruebas.destroy');
+
+        Route::get('/monitor/pruebas/{id}', [MonitorController::class, 'show'])->name('pruebas.show');
+
+        Route::get('pruebas/crear-json', [MonitorController::class, 'crearJson'])->name('pruebas.crear-json');
+        Route::get('pruebas/crear-random', [MonitorController::class, 'crearRandom'])->name('pruebas.crear-random');
+        Route::post('pruebas/cargar-json', [MonitorController::class, 'cargarJson'])->name('pruebas.cargar-json');
+        Route::post('pruebas/cargar-random', [MonitorController::class, 'cargarRandom'])->name('pruebas.cargar-random');
     });
 
     // Rutas para el Supervisor

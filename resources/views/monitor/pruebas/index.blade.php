@@ -3,7 +3,9 @@
 
 @section('content')
 <div class="container">
-    <h1>Pruebas Realizadas</h1>
+    <h1>Pruebas en Sistema</h1>
+    <a href="{{ route('monitor.pruebas.crear-json') }}" class="btn btn-primary">Crear Prueba desde JSON</a>
+    <a href="{{ route('monitor.pruebas.crear-random') }}" class="btn btn-success">Generar Prueba Aleatoria</a>
     <table class="table">
         <thead>
             <tr>
@@ -20,8 +22,8 @@
                     <td>{{ $prueba->fecha_hora_fin }}</td>
                     <td>{{ $prueba->tipoPrueba->nombre_tipo_prueba }}</td>
                     <td>
+                        <button class="btn btn-secondary btn-simular" data-id="{{ $prueba->id_prueba }}">Simular</button>
                         <a href="{{ route('monitor.pruebas.show', $prueba->id_prueba) }}" class="btn btn-info">Ver Detalles</a>
-                        <a href="{{ route('monitor.pruebas.edit', $prueba->id_prueba) }}" class="btn btn-warning">Editar</a>
                     </td>
                 </tr>
             @endforeach
@@ -29,3 +31,15 @@
     </table>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.querySelectorAll('.btn-simular').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const pruebaId = this.dataset.id;
+            // Lógica de simulación aquí
+            alert('Simulación de prueba ID: ' + pruebaId);
+        });
+    });
+</script>
+@endpush

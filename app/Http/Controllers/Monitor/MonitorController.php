@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Monitor;
 
 use App\Http\Controllers\Controller;
-use App\Models\FlujoVehicular;
+use App\Models\FlujoVehicularPrueba;
+use App\Models\FlujoVehicularPruebaDetalle;
 use App\Models\Prueba;
 use App\Models\Semaforo;
 use App\Models\TipoPrueba;
+use App\Models\TipoVehiculo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
+
 
 class MonitorController extends Controller
 {
@@ -124,5 +129,120 @@ class MonitorController extends Controller
         $prueba->delete();
 
         return redirect()->route('monitor.pruebas.index')->with('success', 'Prueba eliminada correctamente.');
+    }
+
+    // Mostrar formulario para cargar JSON
+    public function crearJson()
+    {
+        return view('monitor.pruebas.crear-json');
+    }
+
+    // Mostrar formulario para generar datos aleatorios
+    public function crearRandom()
+    {
+        return view('monitor.pruebas.crear-random');
+    }
+
+    // Procesar JSON
+    public function cargarJson(Request $request)
+    {
+        $request->validate([
+            'archivo_json' => 'required|file|mimes:json|max:2048'
+        ]);
+
+        try {
+            $json = json_decode(file_get_contents($request->file('archivo_json')->path()), true);
+            
+            return DB::transaction(function() use ($json) {
+                // Crear prueba
+                $prueba = Prueba::create([
+                    'id_usuario' => auth()->id(),
+                    'id_tipo_prueba' => 1, // Tipo "archivo"
+                    'fecha_hora_inicio' => $json['prueba']['fecha_hora_inicio'],
+                    'fecha_hora_fin' => $json['prueba']['fecha_hora_fin']
+                ]);
+
+                // Insertar flujos vehiculares
+                foreach ($json['flujo_vehicular_prueba'] as $flujo) {
+                    $flujoPrueba = FlujoVehicularPrueba::create([
+                        'id_prueba' => $prueba->id_prueba,
+                        'id_semaforo' => $flujo['id_semaforo'],
+                        'fecha_hora' => $flujo['fecha_hora'],
+                        'velocidad_promedio' => $flujo['velocidad_promedio']
+                    ]);
+
+                    foreach ($flujo['flujo_vehicular_prueba_detalle'] as $detalle) {
+                        FlujoVehicularPruebaDetalle::create([
+                            'id_flujo_prueba' => $flujoPrueba->id_flujo_prueba,
+                            'id_tipo_vehiculo' => $detalle['id_tipo_vehiculo'],
+                            'cantidad_vehiculos' => $detalle['cantidad_vehiculos']
+                        ]);
+                    }
+                }
+
+                return redirect()->route('monitor.pruebas.index')->with('success', 'Prueba cargada desde JSON correctamente');
+            });
+
+        } catch (\Exception $e) {
+            return back()->withErrors('Error al procesar el archivo: ' . $e->getMessage());
+        }
+    }
+
+    // Generar datos aleatorios
+    public function cargarRandom(Request $request)
+    {
+        $request->validate([
+            'num_flujos' => 'required|integer|min:1',
+            'num_detalles' => 'required|integer|min:1'
+        ]);
+
+        try {
+            $faker = Faker::create();
+            $semaforos = Semaforo::pluck('id_semaforo')->toArray();
+            $tiposVehiculo = TipoVehiculo::pluck('id_tipo_vehiculo')->toArray();
+
+            return DB::transaction(function() use ($faker, $semaforos, $tiposVehiculo, $request) {
+                // Crear prueba
+                $prueba = Prueba::create([
+                    'id_usuario' => auth()->id(),
+                    'id_tipo_prueba' => 2, // Tipo "random"
+                    'fecha_hora_inicio' => now(),
+                    'fecha_hora_fin' => now()->addHour()
+                ]);
+
+                // Generar flujos vehiculares
+                for ($i = 0; $i < $request->num_flujos; $i++) {
+                    $flujoPrueba = FlujoVehicularPrueba::create([
+                        'id_prueba' => $prueba->id_prueba,
+                        'id_semaforo' => $faker->randomElement($semaforos),
+                        'fecha_hora' => $faker->dateTimeBetween($prueba->fecha_hora_inicio, $prueba->fecha_hora_fin),
+                        'velocidad_promedio' => $faker->randomFloat(1, 20, 100)
+                    ]);
+
+                    // Generar detalles
+                    for ($j = 0; $j < $request->num_detalles; $j++) {
+                        FlujoVehicularPruebaDetalle::create([
+                            'id_flujo_prueba' => $flujoPrueba->id_flujo_prueba,
+                            'id_tipo_vehiculo' => $faker->randomElement($tiposVehiculo),
+                            'cantidad_vehiculos' => $faker->numberBetween(1, 20)
+                        ]);
+                    }
+                }
+
+                return redirect()->route('monitor.pruebas.index')->with('success', 'Prueba generada aleatoriamente');
+            });
+
+        } catch (\Exception $e) {
+            return back()->withErrors('Error al generar datos: ' . $e->getMessage());
+        }
+    }
+
+    public function show($id)
+    {
+        // Obtener la prueba con sus relaciones
+        $prueba = Prueba::with(['tipoPrueba', 'flujosVehicularesPrueba.detallesFlujoVehicularPrueba'])->findOrFail($id);
+
+        // Pasar los datos a la vista
+        return view('monitor.pruebas.show', compact('prueba'));
     }
 }

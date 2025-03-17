@@ -34,4 +34,9 @@ class Prueba extends Model
     {
         return $this->hasMany(PruebaEstado::class, 'id_prueba');
     }
+
+    public function flujosVehicularesPrueba()
+    {
+        return $this->hasMany(FlujoVehicularPrueba::class, 'id_prueba');
+    }
 }
