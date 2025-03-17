@@ -25,7 +25,6 @@
                             <a href="{{ route('monitor.pruebas.index') }}">Pruebas</a>
                         @elseif (auth()->user()->rol->nombre_rol === 'Supervisor')
                             <a href="{{ route('supervisor.reportes.index') }}">Reportes</a>
-                            <a href="{{ route('supervisor.reportes.generar') }}">Generar Reporte</a>
                         @endif
 
                         <form action="{{ route('logout') }}" method="POST" style="display:inline;">

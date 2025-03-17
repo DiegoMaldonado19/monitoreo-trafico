@@ -23,7 +23,6 @@
             <h2>Funcionalidades de Supervisor</h2>
             <ul>
                 <li><a href="{{ route('supervisor.reportes.index') }}">Ver Reportes</a></li>
-                <li><a href="{{ route('supervisor.reportes.generar') }}">Generar Reporte</a></li>
             </ul>
         @endif
     </div>

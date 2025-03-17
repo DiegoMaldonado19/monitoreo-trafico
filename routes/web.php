@@ -72,10 +72,15 @@ Route::middleware('auth')->group(function () {
         Route::post('pruebas/cargar-random', [MonitorController::class, 'cargarRandom'])->name('pruebas.cargar-random');
     });
 
-    // Rutas para el Supervisor
     Route::prefix('supervisor')->name('supervisor.')->middleware('role:Supervisor')->group(function () {
-        Route::get('reportes', [ReporteController::class, 'indexReportes'])->name('reportes.index');
-        Route::get('reportes/generar', [ReporteController::class, 'generarReporte'])->name('reportes.generar');
-        Route::get('reportes/{id}', [ReporteController::class, 'showReporte'])->name('reportes.show');
+        Route::get('reportes', [SupervisorController::class, 'indexReportes'])->name('reportes.index');
+        Route::get('consultaResumenTrafico', [SupervisorController::class, 'consultaResumenTrafico'])->name('consultaResumenTrafico');
+        Route::get('consultaIteracionesMonitor', [SupervisorController::class, 'consultaIteracionesMonitor'])->name('consultaIteracionesMonitor');
+        Route::get('consultaFlujoSemaforo', [SupervisorController::class, 'consultaFlujoSemaforo'])->name('consultaFlujoSemaforo');
+        Route::get('consultaCantidadPruebas', [SupervisorController::class, 'consultaCantidadPruebas'])->name('consultaCantidadPruebas');
+        Route::get('consultaCantidadArchivos', [SupervisorController::class, 'consultaCantidadArchivos'])->name('consultaCantidadArchivos');
+        Route::get('consultaTiempoPromedio', [SupervisorController::class, 'consultaTiempoPromedio'])->name('consultaTiempoPromedio');
+        Route::get('consultaPruebasIntervalo', [SupervisorController::class, 'consultaPruebasIntervalo'])->name('consultaPruebasIntervalo');
     });
+    
 });
