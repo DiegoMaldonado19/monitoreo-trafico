@@ -1,25 +1,25 @@
 -- 1. Resumen de tráfico vehicular
 SELECT 
-    fv.fecha_hora,
+    fvp.fecha_hora,
     tc.nombre_tipo_calle,
     c.nombre_calle,
     tv.nombre_tipo_vehiculo,
-    fvd.cantidad_vehiculos,
-    fv.velocidad_promedio
+    fvpd.cantidad_vehiculos,
+    fvp.velocidad_promedio
 FROM 
-    flujo_vehicular fv
+    flujo_vehicular_prueba fvp
 JOIN 
-    flujo_vehicular_detalle fvd ON fv.id_flujo = fvd.id_flujo
+    flujo_vehicular_prueba_detalle fvpd ON fvp.id_flujo_prueba = fvpd.id_flujo_prueba
 JOIN 
-    tipo_vehiculo tv ON fvd.id_tipo_vehiculo = tv.id_tipo_vehiculo
+    tipo_vehiculo tv ON fvpd.id_tipo_vehiculo = tv.id_tipo_vehiculo
 JOIN 
-    semaforo s ON fv.id_semaforo = s.id_semaforo
+    semaforo s ON fvp.id_semaforo = s.id_semaforo
 JOIN 
     calle c ON s.id_calle = c.id_calle
 JOIN 
     tipo_calle tc ON c.id_tipo_calle = tc.id_tipo_calle
 ORDER BY 
-    fv.fecha_hora DESC;
+    fvp.fecha_hora DESC;
 
 -- 2. Registro de iteraciones y tiempos invertidos por monitor
 SELECT 
@@ -46,22 +46,22 @@ SELECT
     s.tiempo_verde,
     s.tiempo_amarillo,
     s.tiempo_rojo,
-    fv.fecha_hora,
-    fv.velocidad_promedio,
+    fvp.fecha_hora,
+    fvp.velocidad_promedio,
     tv.nombre_tipo_vehiculo,
-    fvd.cantidad_vehiculos
+    fvpd.cantidad_vehiculos
 FROM 
     semaforo s
 JOIN 
-    flujo_vehicular fv ON s.id_semaforo = fv.id_semaforo
+    flujo_vehicular_prueba fvp ON s.id_semaforo = fvp.id_semaforo
 JOIN 
-    flujo_vehicular_detalle fvd ON fv.id_flujo = fvd.id_flujo
+    flujo_vehicular_prueba_detalle fvpd ON fvp.id_flujo_prueba = fvpd.id_flujo_prueba
 JOIN 
-    tipo_vehiculo tv ON fvd.id_tipo_vehiculo = tv.id_tipo_vehiculo
+    tipo_vehiculo tv ON fvpd.id_tipo_vehiculo = tv.id_tipo_vehiculo
 JOIN 
     calle c ON s.id_calle = c.id_calle
 ORDER BY 
-    s.id_semaforo, fv.fecha_hora DESC;
+    s.id_semaforo, fvp.fecha_hora DESC;
 
 -- 4.1. Cantidad de pruebas realizadas
 SELECT 
