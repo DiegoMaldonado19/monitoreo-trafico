@@ -28,11 +28,11 @@ class AuthController extends Controller
 
             switch ($usuario->rol->nombre_rol) {
                 case 'Administrador':
-                    return redirect()->route('admin.usuarios.index');
+                    return redirect()->route('dashboard');
                 case 'Monitor':
-                    return redirect()->route('monitor.flujo-vehicular.index');
+                    return redirect()->route('dashboard');
                 case 'Supervisor':
-                    return redirect()->route('supervisor.reportes.index');
+                    return redirect()->route('dashboard');
                 default:
                     return redirect()->route('login')->withErrors(['error' => 'Rol no válido.']);
             }

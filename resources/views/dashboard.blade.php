@@ -3,22 +3,30 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    <h1>Bienvenido, {{ auth()->user()->nombre_usuario }}</h1>
+    <p>Rol: {{ auth()->user()->rol->nombre_rol }}</p>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('¡Bienvenido!') }}
-                </div>
-            </div>
-        </div>
+    <div class="dashboard-links">
+        @if (auth()->user()->rol->nombre_rol === 'Administrador')
+            <h2>Funcionalidades de Administrador</h2>
+            <ul>
+                <li><a href="{{ route('admin.usuarios.index') }}">Gestionar Usuarios</a></li>
+                <li><a href="{{ route('admin.calles.index') }}">Gestionar Calles</a></li>
+                <li><a href="{{ route('admin.semaforos.index') }}">Gestionar Semáforos</a></li>
+            </ul>
+        @elseif (auth()->user()->rol->nombre_rol === 'Monitor')
+            <h2>Funcionalidades de Monitor</h2>
+            <ul>
+                <li><a href="{{ route('monitor.flujo-vehicular.index') }}">Gestionar Flujo Vehicular</a></li>
+                <li><a href="{{ route('monitor.pruebas.index') }}">Gestionar Pruebas</a></li>
+            </ul>
+        @elseif (auth()->user()->rol->nombre_rol === 'Supervisor')
+            <h2>Funcionalidades de Supervisor</h2>
+            <ul>
+                <li><a href="{{ route('supervisor.reportes.index') }}">Ver Reportes</a></li>
+                <li><a href="{{ route('supervisor.reportes.generar') }}">Generar Reporte</a></li>
+            </ul>
+        @endif
     </div>
 </div>
 @endsection

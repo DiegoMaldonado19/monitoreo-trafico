@@ -15,6 +15,20 @@
                 <div class="navbar-links">
                     @auth
                         <a href="{{ route('dashboard') }}">Dashboard</a>
+
+                        <!-- Enlaces según el rol -->
+                        @if (auth()->user()->rol->nombre_rol === 'Administrador')
+                            <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
+                            <a href="{{ route('admin.calles.index') }}">Calles</a>
+                            <a href="{{ route('admin.semaforos.index') }}">Semáforos</a>
+                        @elseif (auth()->user()->rol->nombre_rol === 'Monitor')
+                            <a href="{{ route('monitor.flujo-vehicular.index') }}">Flujo Vehicular</a>
+                            <a href="{{ route('monitor.pruebas.index') }}">Pruebas</a>
+                        @elseif (auth()->user()->rol->nombre_rol === 'Supervisor')
+                            <a href="{{ route('supervisor.reportes.index') }}">Reportes</a>
+                            <a href="{{ route('supervisor.reportes.generar') }}">Generar Reporte</a>
+                        @endif
+
                         <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                             @csrf
                             <button type="submit" class="btn-logout">Cerrar Sesión</button>

@@ -184,3 +184,34 @@ body {
     border-radius: 5px;
     margin-bottom: 20px;
 }
+
+/* Estilos para los enlaces del dashboard */
+.dashboard-links ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.dashboard-links ul li {
+    margin: 10px 0;
+}
+
+.dashboard-links ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+.dashboard-links ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para la barra de navegación */
+.navbar-links a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.navbar-links a:hover {
+    text-decoration: underline;
+}
