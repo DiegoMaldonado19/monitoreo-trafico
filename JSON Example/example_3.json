@@ -1,0 +1,32 @@
+{
+    "prueba": {
+        "id_usuario": 11,
+        "fecha_hora_inicio": "2023-11-15 08:00:00",
+        "fecha_hora_fin": "2023-11-15 09:00:00",
+        "id_tipo_prueba": 1
+    },
+    "flujo_vehicular_prueba": [
+        {
+            "id_semaforo": 1,
+            "fecha_hora": "2023-10-04 08:00:00",
+            "velocidad_promedio": 31.4,
+            "flujo_vehicular_prueba_detalle": [
+                {
+                    "id_tipo_vehiculo": 1,
+                    "cantidad_vehiculos": 15
+                }
+            ]
+        },
+        {
+            "id_semaforo": 2,
+            "fecha_hora": "2023-10-04 08:15:00",
+            "velocidad_promedio": 35.0,
+            "flujo_vehicular_prueba_detalle": [
+                {
+                    "id_tipo_vehiculo": 1,
+                    "cantidad_vehiculos": 10
+                }
+            ]
+        }
+    ]
+}
